@@ -1,0 +1,175 @@
+package com.kiduyu.njugunaproject.agrifarm;
+
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.kiduyu.njugunaproject.agrifarm.Session.Prevalent;
+import com.kiduyu.njugunaproject.agrifarm.StatusBar.StatusBar;
+import com.kiduyu.njugunaproject.agrifarm.UserFargments.AppointmentsFragment;
+import com.kiduyu.njugunaproject.agrifarm.UserFargments.HomeFragment;
+import com.kiduyu.njugunaproject.agrifarm.UserFargments.NewsFragment;
+import com.kiduyu.njugunaproject.agrifarm.UserFargments.ProfileFragment;
+import com.kiduyu.njugunaproject.agrifarm.UserFargments.ReportsFragment;
+import com.kiduyu.njugunaproject.agrifarm.UserFargments.SpecialistsFragment;
+import com.kiduyu.njugunaproject.agrifarm.UserFargments.WeatherFragment;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class HomeActivity extends AppCompatActivity {
+    DrawerLayout drawerLayout;
+    TextView txtActiontitle;
+    CircleImageView circleImageView;
+    RelativeLayout relativeLayout;
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        StatusBar.changeStatusBarColor(this);
+        setContentView(R.layout.activity_home);
+
+        relativeLayout= findViewById(R.id.layoutid);
+
+        txtActiontitle = findViewById(R.id.txt_actiontitle);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        circleImageView = findViewById(R.id.profile_image_message_activity);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TextView name =findViewById(R.id.txt_name);
+        TextView phone =findViewById(R.id.txt_email);
+        name.setText(Prevalent.currentOnlineUser.getFullname());
+        phone.setText(Prevalent.currentOnlineUser.getPhone());
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        Fragment fragment = new WeatherFragment();
+        callFragment(fragment);
+
+    }
+
+    public void callFragment(Fragment fragmentClass) {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_frame, fragmentClass).addToBackStack("adds").commit();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+    }
+
+
+    public void ClickNavigation(View view) {
+
+        Fragment fragment;
+        switch (view.getId()) {
+            case R.id.img_close:
+                onBackPressedd();
+                break;
+            case R.id.lvl_home:
+                txtActiontitle.setText("Chats");
+                Glide.with(this).load(R.drawable.ic_home).into(circleImageView);
+                relativeLayout.setBackgroundColor(Color.parseColor("#FFF3F0F0"));
+                fragment = new HomeFragment();
+                callFragment(fragment);
+                break;
+            case R.id.myprofile:
+                txtActiontitle.setText("Profile");
+                Glide.with(this).load(R.drawable.ic_person).into(circleImageView);
+                relativeLayout.setBackgroundColor(Color.parseColor("#FFF3F0F0"));
+                fragment = new ProfileFragment();
+                callFragment(fragment);
+                break;
+            case R.id.weather:
+                txtActiontitle.setText("Weather Updates");
+                Glide.with(this).load(R.drawable.ic_cloudy).into(circleImageView);
+                relativeLayout.setBackground(getDrawable(R.drawable.appbackground));
+                fragment = new WeatherFragment();
+                callFragment(fragment);
+                break;
+            case R.id.applications:
+                txtActiontitle.setText("My Appointments");
+                Glide.with(this).load(R.drawable.ic_person).into(circleImageView);
+                relativeLayout.setBackground(getDrawable(R.drawable.appbackground));
+                fragment = new AppointmentsFragment();
+                callFragment(fragment);
+                break;
+            case R.id.news:
+                txtActiontitle.setText("News Updates");
+                Glide.with(this).load(R.drawable.ic_news).into(circleImageView);
+                relativeLayout.setBackgroundColor(Color.parseColor("#FFF3F0F0"));
+                fragment = new NewsFragment();
+                callFragment(fragment);
+
+                break;
+            case R.id.specialists:
+                txtActiontitle.setText("Available Specialists");
+                Glide.with(this).load(R.drawable.ic_researcher).into(circleImageView);
+                relativeLayout.setBackgroundColor(Color.parseColor("#FFF3F0F0"));
+                fragment = new SpecialistsFragment();
+                callFragment(fragment);
+                break;
+            case R.id.reports:
+                txtActiontitle.setText("Generate Reports");
+                Glide.with(this).load(R.drawable.ic_dashboard).into(circleImageView);
+                relativeLayout.setBackgroundColor(Color.parseColor("#FFF3F0F0"));
+                fragment = new ReportsFragment();
+                callFragment(fragment);
+
+                break;
+            case R.id.logout:
+
+                Prevalent.currentOnlineUser=null;
+                startActivity(new Intent(HomeActivity.this,LoginActivity.class));
+                break;
+
+            case R.id.img_noti:
+                startActivity(new Intent(HomeActivity.this, NotificationActivity.class));
+                break;
+            case R.id.share:
+                shareApp();
+                break;
+
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+    }
+
+    private void onBackPressedd() {
+
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    private void shareApp() {
+        try {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.app_name));
+            String shareMessage = "\nLet me recommend you this application\n\n";
+            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+            startActivity(Intent.createChooser(shareIntent, "choose one"));
+        } catch (Exception e) {
+            //e.toString();
+        }
+    }
+
+
+}

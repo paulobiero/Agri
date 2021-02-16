@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".UserFargments.seach_user">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/consultant_refresh"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ly_recycle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/search_editText_specialist"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/edit_text_bg"
+                android:drawableStart="@drawable/search_icon"
+                android:drawablePadding="10dp"
+                android:hint="Search here"
+                android:maxLines="1"
+                android:paddingStart="10dp"
+                android:singleLine="true"
+                android:textColor="#fff"
+                android:textColorHint="#fff"
+                tools:ignore="RtlSymmetry" />
+
+            <androidx.recyclerview.widget.RecyclerView
+
+                android:id="@+id/recyclerview_consultant"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="3dp"
+                android:scrollbars="vertical" />
+
+        </LinearLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:id="@+id/next"
+        android:src="@drawable/ic_check_black_24dp"
+        android:layout_height="wrap_content"
+        android:contentDescription="TODO" />
+</FrameLayout>
