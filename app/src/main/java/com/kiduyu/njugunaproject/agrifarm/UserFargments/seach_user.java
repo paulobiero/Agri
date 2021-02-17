@@ -27,8 +27,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kiduyu.njugunaproject.agrifarm.Adapter.SpecialistAdapter;
+import com.kiduyu.njugunaproject.agrifarm.Adapter.chatWithAdapter;
 import com.kiduyu.njugunaproject.agrifarm.Constants.Constants;
 import com.kiduyu.njugunaproject.agrifarm.Model.Specialist;
+import com.kiduyu.njugunaproject.agrifarm.Model.User;
 import com.kiduyu.njugunaproject.agrifarm.R;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
@@ -55,16 +57,14 @@ public class seach_user extends Fragment {
     private String mParam2;
     private String TAG="SEARCH_USERS";
     public static boolean isRefreshed;
-    private SpecialistAdapter specialistAdapter;
+    private chatWithAdapter specialistAdapter;
 
     RequestQueue mRequestQueue;
     RecyclerView recycler;
     SwipeRefreshLayout swipeRefreshLayout;
-    private ArrayList<Specialist> specialistArrayList = new ArrayList<>();
+    private ArrayList<User> specialistArrayList = new ArrayList<>();
 
-    public seach_user() {
-        // Required empty public constructor
-    }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -131,7 +131,7 @@ public class seach_user extends Fragment {
 
                                     Log.d("TAG", "onResponse: " + Name + " " + phone + " " + idnumber + " " + location + " " + image + " " + date);
                                     //Loading.showProgressDialog(getActivity(),false);
-                                    specialistArrayList.add(new Specialist("",Name,phone,idnumber,location,image,date));
+                                    specialistArrayList.add(new User(Name,phone,idnumber,null,image));
                                     //tipArrayList.add(new Tip(title, description ,image));
 
                                 }
@@ -151,14 +151,14 @@ public class seach_user extends Fragment {
                                     //Loading.showProgressDialog(getActivity(),false);
 
                                     //tipArrayList.add(new Tip(title, description ,image));
-                                    specialistArrayList.add(new Specialist("",Name,phone,idnumber,location,image,date));
+                                    specialistArrayList.add(new User(Name,phone,idnumber,null,image));
 
                                 }
                             }
 
 
                             progressDialog.dismiss();
-                            specialistAdapter = new SpecialistAdapter(getActivity(), specialistArrayList);
+                            specialistAdapter = new chatWithAdapter(getActivity(), specialistArrayList);
                             recycler.setAdapter(specialistAdapter);
 
                         } catch (JSONException e) {
@@ -237,14 +237,14 @@ public class seach_user extends Fragment {
     }
 
     private void filter(String text) {
-        ArrayList<Specialist> filteredList = new ArrayList<>();
-        for (Specialist item : specialistArrayList) {
-            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+        ArrayList<User> filteredList = new ArrayList<>();
+        for (User item : specialistArrayList) {
+            if (item.getFullname().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(item);
             }
         }
 
-        specialistAdapter = new SpecialistAdapter(getActivity(), filteredList);
+        specialistAdapter = new chatWithAdapter(getActivity(), filteredList);
         recycler.setAdapter(specialistAdapter);
         specialistAdapter.notifyDataSetChanged();
     }

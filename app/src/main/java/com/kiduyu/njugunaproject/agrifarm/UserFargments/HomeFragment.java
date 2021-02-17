@@ -6,13 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.kiduyu.njugunaproject.agrifarm.HomeActivity;
+import com.kiduyu.njugunaproject.agrifarm.Model.FriendlyMessage;
 import com.kiduyu.njugunaproject.agrifarm.R;
+import com.kiduyu.njugunaproject.agrifarm.Session.Prevalent;
+
+import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
     @Override
@@ -40,7 +50,25 @@ public class HomeFragment extends Fragment {
                alert.show();
            }
        });
+        ArrayList<FriendlyMessage>messages=new ArrayList<>();
+        DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Users/"+ Prevalent.currentOnlineUser.getUsername().trim()+"/chats").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                for (DataSnapshot dataSnapshot:snapshot.getChildren())
+                {
+                    FriendlyMessage message=dataSnapshot.getValue(FriendlyMessage.class);
+                    messages.add(message);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         return layout;
     }
@@ -53,6 +81,8 @@ public class HomeFragment extends Fragment {
         getParentFragmentManager().setFragmentResult("type",bundleResult);
         Fragment fragment=new seach_user();
         callFragment(fragment);
+          ((HomeActivity) requireActivity()).txtActiontitle.setText("Choose user");
+
 
     }
     public void callFragment(Fragment fragmentClass) {

@@ -55,4 +55,15 @@ public class User {
     public void setImage(String image) {
         this.image = image;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "fullname='" + fullname + '\'' +
+                ", phone='" + phone + '\'' +
+                ", username='" + username + '\'' +
+                ", pass='" + pass + '\'' +
+                ", image='" + image + '\'' +
+                '}';
+    }
 }

@@ -1,6 +1,7 @@
 package com.kiduyu.njugunaproject.agrifarm.Constants;
 
 public class Constants {
+    public static final String FRIENDLY_MSG_LENGTH = "200";
     public static String BASE_API = "https://the-bookhub.co.ke/projects/agrifarm/api/";
     public static String NEWS_API = "news_api.php";
     public static String CREATE_APPOINTMENT_API = "create_app_api.php";

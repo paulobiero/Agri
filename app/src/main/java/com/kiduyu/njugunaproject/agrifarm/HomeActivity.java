@@ -31,7 +31,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
-    TextView txtActiontitle;
+   public TextView txtActiontitle;
     CircleImageView circleImageView;
     RelativeLayout relativeLayout;
 

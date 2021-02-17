@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -33,9 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         password=findViewById(R.id.editTextPassword);
 
 
-        // todo remove me I am for testing
-        username.setText("25470");
-        password.setText("0");
+
 
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -88,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.i("LOGINACTIVITY", "onDataChange: "+dataSnapshot.getChildrenCount());
                 if (dataSnapshot.child("Users").child(muser).exists()) {
                     User usersData = dataSnapshot.child("Users").child(muser).getValue(User.class);
 
