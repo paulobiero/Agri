@@ -52,6 +52,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class chatActivity extends AppCompatActivity {
 
+    private String receiver;
+
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView;
         ImageView messageImageView;
@@ -100,9 +102,9 @@ public class chatActivity extends AppCompatActivity {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Set default username is anonymous.
         mUsername = "Me";
-        String reciever=getIntent().getStringExtra("consultant");
+        receiver = getIntent().getStringExtra("consultant");
         // Initialize Firebase Auth
-      MESSAGES_CHILD= "Users/"+ Prevalent.currentOnlineUser.getUsername().trim()+"/chats/"+reciever;
+      MESSAGES_CHILD= "Users/"+ Prevalent.currentOnlineUser.getUsername().trim()+"/chats/"+ receiver;
         // Configure Google Sign In
         Log.i(TAG, "onCreate: "+MESSAGES_CHILD);
         Log.i(TAG, "onCreate: Started....");
@@ -240,7 +242,7 @@ public class chatActivity extends AppCompatActivity {
                         FriendlyMessage(mMessageEditText.getText().toString(),
                         mUsername,
                         mPhotoUrl,
-                        null /* no image */);
+                        null /* no image */,receiver);
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD)
                         .push().setValue(friendlyMessage);
                 mMessageEditText.setText("");
@@ -299,7 +301,7 @@ public class chatActivity extends AppCompatActivity {
                     Log.d(TAG, "Uri: " + uri.toString());
 
                     FriendlyMessage tempMessage = new FriendlyMessage(null, mUsername, mPhotoUrl,
-                            LOADING_IMAGE_URL);
+                            LOADING_IMAGE_URL,receiver);
                     mFirebaseDatabaseReference.child(MESSAGES_CHILD).push()
                             .setValue(tempMessage, new DatabaseReference.CompletionListener() {
                                 @Override
@@ -337,7 +339,7 @@ public class chatActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Uri> task) {
                                             FriendlyMessage friendlyMessage =
                                                     new FriendlyMessage(null, mUsername, mPhotoUrl,
-                                                            task.getResult().toString());
+                                                            task.getResult().toString(),receiver);
                                             mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(key)
                                                     .setValue(friendlyMessage);
                                             logMessageSent();

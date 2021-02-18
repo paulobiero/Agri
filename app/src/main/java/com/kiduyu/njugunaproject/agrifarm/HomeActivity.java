@@ -61,6 +61,7 @@ public class HomeActivity extends AppCompatActivity {
 
         Fragment fragment = new WeatherFragment();
         callFragment(fragment);
+        relativeLayout.setBackground(getDrawable(R.drawable.appbackground));
 
     }
 
