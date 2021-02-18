@@ -91,10 +91,13 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.viewHolder> {
         TextDrawable ic1 = builder.build(String.valueOf(key.charAt(0)), color1);
         imageView.setImageDrawable(ic1);
         name.setText(key);
+        ArrayList<FriendlyMessage>messages=this.messages.get(key);
+        accommodationCount.setText(messages.get(messages.size()-1).getText());
 
 holder.itemView.setOnClickListener(view -> {
     Intent intent= new Intent(context, chatActivity.class);
     intent.putExtra("consultant",key);
+    intent.putExtra("isNew",false);
 
     context.startActivity(intent);
 });

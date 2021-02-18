@@ -28,6 +28,7 @@ import com.kiduyu.njugunaproject.agrifarm.Constants.Constants;
 import com.kiduyu.njugunaproject.agrifarm.Model.Application;
 import com.kiduyu.njugunaproject.agrifarm.Model.Specialist;
 import com.kiduyu.njugunaproject.agrifarm.R;
+import com.kiduyu.njugunaproject.agrifarm.Session.Prevalent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +44,8 @@ public class AppointmentsFragment extends Fragment {
     EditText search;
     SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<Application> applicationArrayList = new ArrayList<>();
+    private String TAG="APPOINTMENTS";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -134,10 +137,14 @@ public class AppointmentsFragment extends Fragment {
                                     String sphone = consultant.getString("sphone");
                                     String datevalue = consultant.getString("datevalue");
                                     String timevalue = consultant.getString("timevalue");
+                                    boolean isPending=(consultant.getInt("pending")==1);
+                                    boolean isAccepted=(consultant.getInt("accep")==1);
+                                    Log.i(TAG, "onResponse: " + sname + " " + uname + " " + uphone + " " + sphone + " " + datevalue + " " + timevalue +" pending: "+isPending+" accepted: "+isAccepted);
 
-                                    Log.d("TAG", "onResponse: " + sname + " " + uname + " " + uphone + " " + sphone + " " + datevalue + " " + timevalue);
                                     //Loading.showProgressDialog(getActivity(),false);
-                                   applicationArrayList.add(new Application(sname,uname,uphone,sphone,datevalue,timevalue));
+                                    if (uname.equals(Prevalent.currentOnlineUser.getUsername())){
+                                        applicationArrayList.add(new Application(sname,uname,uphone,sphone,datevalue,timevalue,isPending,isAccepted));
+                                    }
                                     //tipArrayList.add(new Tip(title, description ,image));
 
                                 }
@@ -152,10 +159,14 @@ public class AppointmentsFragment extends Fragment {
                                     String sphone = consultant.getString("sphone");
                                     String datevalue = consultant.getString("datevalue");
                                     String timevalue = consultant.getString("timevalue");
-
-                                    Log.d("TAG", "onResponse: " + sname + " " + uname + " " + uphone + " " + sphone + " " + datevalue + " " + timevalue);
+                                    boolean isPending=(consultant.getInt("pending")==1);
+                                    boolean isAccepted=(consultant.getInt("accep")==1);
+                                    //  Log.i(TAG, "onResponse: " + sname + " " + uname + " " + uphone + " " + sphone + " " + datevalue + " " + timevalue +" pending: "+isPending+" accepted: "+isAccepted);
+                                    Log.i(TAG, "onResponse: " + sname + " " + uname + " " + uphone + " " + sphone + " " + datevalue + " " + timevalue +" pending: "+isPending+" accepted: "+isAccepted);
                                     //Loading.showProgressDialog(getActivity(),false);
-                                    applicationArrayList.add(new Application(sname,uname,uphone,sphone,datevalue,timevalue));
+                                    if (uname.equals(Prevalent.currentOnlineUser.getUsername())){
+                                        applicationArrayList.add(new Application(sname,uname,uphone,sphone,datevalue,timevalue,isPending,isAccepted));
+                                    }
 
                                 }
                             }

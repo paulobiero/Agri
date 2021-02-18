@@ -26,13 +26,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.kiduyu.njugunaproject.agrifarm.Adapter.SpecialistAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.kiduyu.njugunaproject.agrifarm.Adapter.chatWithAdapter;
 import com.kiduyu.njugunaproject.agrifarm.Constants.Constants;
-import com.kiduyu.njugunaproject.agrifarm.Model.Specialist;
 import com.kiduyu.njugunaproject.agrifarm.Model.User;
 import com.kiduyu.njugunaproject.agrifarm.R;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,6 +65,7 @@ public class seach_user extends Fragment {
     RecyclerView recycler;
     SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<User> specialistArrayList = new ArrayList<>();
+    private static int USER_TYPE=0;
 
 
 
@@ -187,11 +190,14 @@ public class seach_user extends Fragment {
                 int result = bundle.getInt("bundleKey");
                 // Do something with the result
                 Log.i(TAG, "onFragmentResult: "+result);
+                USER_TYPE=result;
                 if (result==0)
                 {
+                    fetchData();
                     //fetch specialists
                 }
                 else {
+                    fetchFarmers();
                     //fetch users
                 }
             }
@@ -223,14 +229,48 @@ public class seach_user extends Fragment {
         recycler.setLayoutManager(layoutManager);
         recycler.setFocusable(false);
 
-        fetchData();
+      //  fetchData();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 isRefreshed = true;
+                if (USER_TYPE==0)
                 fetchData();
+                else
+                    fetchFarmers();
                 swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(getContext(), "Data refreshed", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    private void fetchFarmers() {
+        specialistArrayList.clear();
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Fetching Specialists");
+        progressDialog.setMessage("Please wait......");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap:snapshot.child("Users").getChildren()
+                     ) {
+                    specialistArrayList.add(snap.getValue(User.class));
+                }
+
+                progressDialog.dismiss();
+                specialistAdapter = new chatWithAdapter(getActivity(), specialistArrayList);
+                recycler.setAdapter(specialistAdapter);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });

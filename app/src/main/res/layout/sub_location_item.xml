@@ -31,6 +31,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:text="23 accommodations"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:id="@+id/accommodation_count"
             android:textSize="12sp"
             android:layout_height="wrap_content"/>

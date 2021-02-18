@@ -59,4 +59,26 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/no_chats"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="100dp"
+            android:src="@drawable/no_chats"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="100dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:text="No chats here,add your first chat"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:fontFamily="serif-monospace"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </RelativeLayout>

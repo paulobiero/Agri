@@ -56,6 +56,7 @@ public class chatWithAdapter extends RecyclerView.Adapter<chatWithAdapter.MyView
                 Intent intent= new Intent(mcontext, chatActivity.class);
                 intent.putExtra("consultant",consultant.getUsername().trim());
                 intent.putExtra("consultant_phone",consultant.getPhone());
+                intent.putExtra("isNew",true);
                 mcontext.startActivity(intent);
             }
         });

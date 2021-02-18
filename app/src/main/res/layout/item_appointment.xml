@@ -27,11 +27,11 @@
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="@dimen/spacing_xxlarge"
-                android:layout_height="@dimen/spacing_xxlarge"
-                android:foreground="@color/overlay_light_20"
                 android:id="@+id/single_application_user"
-                android:src="@drawable/ic_person" />
+                android:layout_width="@dimen/spacing_xxlarge"
+                android:layout_height="39dp"
+                android:src="@drawable/ic_baseline_check_24"
+                app:civ_circle_background_color="@color/green" />
 
             <View
                 android:layout_width="@dimen/spacing_large"

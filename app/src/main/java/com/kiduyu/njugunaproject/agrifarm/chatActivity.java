@@ -58,6 +58,7 @@ public class chatActivity extends AppCompatActivity {
         TextView messageTextView;
         ImageView messageImageView;
         TextView messengerTextView;
+        TextView messengerTextView1;
         CircleImageView messengerImageView;
 
         public MessageViewHolder(View v) {
@@ -65,6 +66,7 @@ public class chatActivity extends AppCompatActivity {
             messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
             messageImageView = (ImageView) itemView.findViewById(R.id.messageImageView);
             messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
+            messengerTextView1 = (TextView) itemView.findViewById(R.id.messengerTextView1);
             messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
         }
     }
@@ -88,6 +90,7 @@ public class chatActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private EditText mMessageEditText;
     private ImageView mAddMessageImageView;
+    private View noChats;
 
     // Firebase instance variables
 
@@ -103,6 +106,8 @@ public class chatActivity extends AppCompatActivity {
         // Set default username is anonymous.
         mUsername = "Me";
         receiver = getIntent().getStringExtra("consultant");
+        boolean isNew=getIntent().getBooleanExtra("isNew",false);
+
         // Initialize Firebase Auth
       MESSAGES_CHILD= "Users/"+ Prevalent.currentOnlineUser.getUsername().trim()+"/chats/"+ receiver;
         // Configure Google Sign In
@@ -110,11 +115,15 @@ public class chatActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate: Started....");
         // Initialize ProgressBar and RecyclerView.
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        noChats=(View)findViewById(R.id.no_chats);
         mMessageRecyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(true);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
-
+        if (isNew){
+            mProgressBar.setVisibility(View.GONE);
+            noChats.setVisibility(View.VISIBLE);
+        }
         // New child entries
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         SnapshotParser<FriendlyMessage> parser = new SnapshotParser<FriendlyMessage>() {
@@ -145,8 +154,21 @@ public class chatActivity extends AppCompatActivity {
                                             int position,
                                             FriendlyMessage friendlyMessage) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                if (noChats.getVisibility()==View.VISIBLE)
+                {
+                    noChats.setVisibility(View.GONE);
+                }
+                View meLayout=viewHolder.itemView.findViewById(R.id.me_layout);
+                View themLayout=viewHolder.itemView.findViewById(R.id.them_layout);
+                if (friendlyMessage.getName().equals("Me"))
+                {
+                    meLayout.setVisibility(View.VISIBLE);
+                    themLayout.setVisibility(View.GONE);
+
+                }
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
+                    viewHolder.messengerTextView1.setText(friendlyMessage.getText());
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
                     viewHolder.messageImageView.setVisibility(ImageView.GONE);
                 } else if (friendlyMessage.getImageUrl() != null) {
@@ -180,6 +202,7 @@ public class chatActivity extends AppCompatActivity {
 
 
                 viewHolder.messengerTextView.setText(friendlyMessage.getName());
+
                 if (friendlyMessage.getPhotoUrl() == null) {
                     viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(chatActivity.this,
                             R.drawable.ic_person_black_24dp));
